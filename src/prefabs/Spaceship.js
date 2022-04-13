@@ -9,7 +9,14 @@ class Spaceship extends Phaser.GameObjects.Sprite {
 
     update() {
         // move spaceship left 
-        this.x -= this.moveSpeed;
+        // using the point system to indicate which ship 
+        // has to go faster 
+        if (this.points > 30){
+            this.x -= this.moveSpeed + 2;
+        }
+        else{
+            this.x -= this.moveSpeed;
+        }
         // wrap around from left edge to right edge
         if (this.x <= 0 - this.width){
             this.reset();
