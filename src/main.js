@@ -11,3 +11,10 @@ let borderPadding = borderUISize / 3;
 
 // reserve keyboard vars
 let keyF, keyR, keyLEFT, keyRIGHT;
+
+
+/*
+    Point Breakdown
+    20 - Create a new spaceship type (w/ new artwork) that's smaller, 
+         moves faster, and is worth more points 
+*/
