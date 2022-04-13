@@ -8,6 +8,7 @@ class Play extends Phaser.Scene{
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/starfield.png');
+        this.load.image('speedy', './assets/speedy.png');
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64,
         frameHeight: 32, stateFrame: 0, endFrame: 9});
@@ -43,6 +44,8 @@ class Play extends Phaser.Scene{
         borderUISize*5 + borderPadding*2, 'spaceship', 0, 10).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship',
         0, 10).setOrigin(0,0);
+        this.ship04 = new Spaceship(this, game.config.width + borderUISize*5, borderUISize*8 + borderPadding*9, 'speedy',
+        0, 10).setOrigin(0,0);
         // define keys
         keyF  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -71,7 +74,20 @@ class Play extends Phaser.Scene{
         }
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize 
         +borderPadding*2,this.p1Score, scoreConfig);
-        
+        // display fire
+        let fireConfig = {
+            fontFamily: 'Courier',
+            fontSize: '35px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'center',
+            padding: {
+                top: 5,
+                bottom: 5, 
+            },
+            fixedWidth: 100
+        }
+        this.add.text(borderUISize*6.5 + borderPadding*6.5, borderUISize+borderPadding*2, "FIRE", fireConfig);
         // GAME OVER flag
         this.gameOver = false;
         // 60-second play clock
@@ -96,10 +112,11 @@ class Play extends Phaser.Scene{
         this.starfield.tilePositionX -= 4;
         if (!this.gameOver){
             this.p1Rocket.update();
-            // update spaceships (x3)
+            // update spaceships (x4)
             this.ship01.update();
             this.ship02.update();
             this.ship03.update(); 
+            this.ship04.update();
         }
          // checking collisions
         if (this.checkCollision(this.p1Rocket, this.ship03)){
@@ -144,6 +161,7 @@ class Play extends Phaser.Scene{
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion');
     }
+
 }
 
 
