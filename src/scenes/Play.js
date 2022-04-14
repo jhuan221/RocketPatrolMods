@@ -75,7 +75,7 @@ class Play extends Phaser.Scene{
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize 
         +borderPadding*2,this.p1Score, scoreConfig);
         // display fire
-        let fireConfig = {
+        /*let fireConfig = {
             fontFamily: 'Courier',
             fontSize: '35px',
             backgroundColor: '#F3B141',
@@ -86,10 +86,13 @@ class Play extends Phaser.Scene{
                 bottom: 5, 
             },
             fixedWidth: 100
-        }
-        this.add.text(borderUISize*6.5 + borderPadding*6.5, borderUISize+borderPadding*2, "FIRE", fireConfig);
+        }*/
+        //this.add.text(borderUISize*6.5 + borderPadding*6.5, borderUISize+borderPadding*2, "FIRE", fireConfig);
+
         // GAME OVER flag
         this.gameOver = false;
+        // displaying the time
+        //this.time.addEvent(this.displayClock(cur_time));
         // 60-second play clock
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
@@ -99,9 +102,29 @@ class Play extends Phaser.Scene{
             'Press (R) to Restart or <- for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+        // display time
+        let timeConfig = {
+        fontFamily: 'Courier',
+        fontSize: '28px',
+        backgroundColor: '#F3B141',
+        color: '#843605',
+        align: 'center',
+        padding: {
+            top: 5,
+            bottom: 5, 
+        },
+        fixedWidth: 150
+        }
+        this.timeRight = this.add.text (borderUISize*13.6 + borderPadding, borderUISize + borderPadding*2,
+        'Time: ' + game.settings.gameTimer/1000, timeConfig);
     }
 
-    update() {
+    update() {    
+        // decreasing the timer
+        if (!this.gameOver && (this.time.now < game.settings.gameTimer)){
+            this.timeRight.text = 'Time:' + parseInt((game.settings.gameTimer - this.time.now)/1000);
+        }
+        //console.log(this.time.now);
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
@@ -167,6 +190,4 @@ class Play extends Phaser.Scene{
     }
 
 }
-
-
 
