@@ -103,6 +103,7 @@ class Play extends Phaser.Scene{
             this.gameOver = true;
         }, null, this);
         // display time
+        this.cur_time = game.settings.gameTimer;
         let timeConfig = {
         fontFamily: 'Courier',
         fontSize: '28px',
@@ -116,13 +117,13 @@ class Play extends Phaser.Scene{
         fixedWidth: 150
         }
         this.timeRight = this.add.text (borderUISize*13.6 + borderPadding, borderUISize + borderPadding*2,
-        'Time: ' + game.settings.gameTimer/1000, timeConfig);
+        'Time: ' + this.cur_time/1000, timeConfig);
     }
 
     update() {    
         // decreasing the timer
         if (!this.gameOver && (this.time.now < game.settings.gameTimer)){
-            this.timeRight.text = 'Time:' + parseInt((game.settings.gameTimer - this.time.now)/1000);
+            this.timeRight.text = 'Time:' + parseInt((this.cur_time - this.time.now)/1000);
         }
         //console.log(this.time.now);
         // check key input for restart
@@ -185,6 +186,9 @@ class Play extends Phaser.Scene{
         });
         // score add and repaint
         this.p1Score += ship.points;
+        this.cur_time += 5000;
+        this.timeRight.text = this.timeRight.text = 'Time:' + parseInt((this.cur_time)/1000);
+        console.log(game.settings.gameTimer);
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion');
     }

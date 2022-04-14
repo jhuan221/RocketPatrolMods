@@ -15,7 +15,12 @@ let keyF, keyR, keyLEFT, keyRIGHT;
 
 /*
     Point Breakdown
-    Total: 30/100
+    Total: 50/100
+    20 - Implement a new timing/scoring mechanism that adds time to the clock for successful hits
+        * every time a ship is hit, the timer increases by five seconds
+
     20 - Create a new spaceship type (w/ new artwork) that's smaller, moves faster, and is worth more points 
-    10 - Display the time remaining (in seconds) on the screen (10)
+        * new ship is faster and player's earn 40 points if they take down the ship
+    
+    10 - Display the time remaining (in seconds) on the screen 
 */
