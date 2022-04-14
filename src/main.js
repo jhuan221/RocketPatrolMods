@@ -15,6 +15,7 @@ let keyF, keyR, keyLEFT, keyRIGHT;
 
 /*
     Point Breakdown
-    20 - Create a new spaceship type (w/ new artwork) that's smaller, 
-         moves faster, and is worth more points 
+    Total: 30/100
+    20 - Create a new spaceship type (w/ new artwork) that's smaller, moves faster, and is worth more points 
+    10 - Display the time remaining (in seconds) on the screen (10)
 */
