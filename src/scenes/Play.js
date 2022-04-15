@@ -34,23 +34,28 @@ class Play extends Phaser.Scene{
         0x000000).setOrigin(0,0);
         this.add.rectangle(game.config.width -borderUISize, 0, borderUISize,
         game.config.height, 0x000000).setOrigin(0,0);
-        // add rocket (p1)
+        // add rocket (p1 & p2)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize -
-        borderPadding, 'rocket').setOrigin(0.5, 0);
+        borderPadding, 'rocket').setOrigin(0, 0);
+        //t = new Rocket(this, game.config.width/2, game.config.height - borderUISize -
+        //borderPadding, 'rocket').setOrigin(0.50, 0);
         // add spaceships (x3)
         this.ship01 = new Spaceship(this, game.config.width + 
         borderUISize*6, borderUISize*5, 'spaceship', 0, 30).setOrigin(0, 0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3,
         borderUISize*6 + borderPadding*3, 'spaceship', 0, 10).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*7 + borderPadding*5, 'spaceship',
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*7 + borderPadding*5.3, 'spaceship',
         0, 10).setOrigin(0,0);
-        this.ship04 = new Spaceship(this, game.config.width - borderUISize, borderUISize*4, 'speedy',
+        this.ship04 = new Spaceship(this, game.config.width, borderUISize*4, 'speedy',
         0, 40).setOrigin(0,0);
         // define keys
         keyF  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         // animcation config
         this.anims.create({
             key: 'explode', 
@@ -74,36 +79,24 @@ class Play extends Phaser.Scene{
         }
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize 
         +borderPadding*2,this.p1Score, scoreConfig);
-        // display fire
-        /*let fireConfig = {
-            fontFamily: 'Courier',
-            fontSize: '35px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'center',
-            padding: {
-                top: 5,
-                bottom: 5, 
-            },
-            fixedWidth: 100
-        }*/
-        //this.add.text(borderUISize*6.5 + borderPadding*6.5, borderUISize+borderPadding*2, "FIRE", fireConfig);
-
         // GAME OVER flag
         this.gameOver = false;
         // displaying the time
         //this.time.addEvent(this.displayClock(cur_time));
         // 60-second play clock
+        this.cur_time = game.settings.gameTimer;
         scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+        this.clock = this.time.delayedCall(this.cur_time, () => {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', 
             scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64,
             'Press (R) to Restart or <- for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+
+        //console.log("current gameTimer: " + this.clock.delay);
         // display time
-        this.cur_time = game.settings.gameTimer;
+        //this.cur_time = game.settings.gameTimer;
         let timeConfig = {
         fontFamily: 'Courier',
         fontSize: '28px',
@@ -122,8 +115,9 @@ class Play extends Phaser.Scene{
 
     update() {    
         // decreasing the timer
-        if (!this.gameOver && (this.time.now < game.settings.gameTimer)){
+        if (!this.gameOver && (this.time.now < this.clock.delay)){
             this.timeRight.text = 'Time:' + parseInt((this.cur_time - this.time.now)/1000);
+            console.log("timer currently: " + this.time.now/1000);
         }
         //console.log(this.time.now);
         // check key input for restart
@@ -136,6 +130,7 @@ class Play extends Phaser.Scene{
         this.starfield.tilePositionX -= 4;
         if (!this.gameOver){
             this.p1Rocket.update();
+            //this.p2Rocket.update();
             // update spaceships (x4)
             this.ship01.update();
             this.ship02.update();
@@ -185,12 +180,15 @@ class Play extends Phaser.Scene{
             boom.destroy();                     // remove explosion sprite 
         });
         // score add and repaint
-        this.p1Score += ship.points;
-        this.cur_time += 5000;
-        this.timeRight.text = this.timeRight.text = 'Time:' + parseInt((this.cur_time)/1000);
-        console.log(game.settings.gameTimer);
+        this.p1Score += ship.points;   
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion');
+        // increasing timer 
+        this.cur_time += 5000;
+        this.time.preUpdate(this.time.now, this.cur_time - this.time.now);
+        this.timeRight.text = this.timeRight.text = 'Time:' + parseInt((this.cur_time)/1000);  
+        this.clock.delay += 5000;
+        //console.log("the clock elapsed: " + this.clock.elapsed/1000);
     }
 
 }
