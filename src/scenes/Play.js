@@ -37,8 +37,6 @@ class Play extends Phaser.Scene{
         // add rocket (p1 & p2)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize -
         borderPadding, 'rocket').setOrigin(0, 0);
-        //t = new Rocket(this, game.config.width/2, game.config.height - borderUISize -
-        //borderPadding, 'rocket').setOrigin(0.50, 0);
         // add spaceships (x3)
         this.ship01 = new Spaceship(this, game.config.width + 
         borderUISize*6, borderUISize*5, 'spaceship', 0, 30).setOrigin(0, 0);
@@ -53,9 +51,6 @@ class Play extends Phaser.Scene{
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         // animcation config
         this.anims.create({
             key: 'explode', 
@@ -84,19 +79,15 @@ class Play extends Phaser.Scene{
         // displaying the time
         //this.time.addEvent(this.displayClock(cur_time));
         // 60-second play clock
-        this.cur_time = game.settings.gameTimer;
         scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(this.cur_time, () => {
+        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', 
             scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64,
             'Press (R) to Restart or <- for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
-
-        //console.log("current gameTimer: " + this.clock.delay);
-        // display time
-        //this.cur_time = game.settings.gameTimer;
+        // displaying time
         let timeConfig = {
         fontFamily: 'Courier',
         fontSize: '28px',
@@ -110,16 +101,12 @@ class Play extends Phaser.Scene{
         fixedWidth: 150
         }
         this.timeRight = this.add.text (borderUISize*13.6 + borderPadding, borderUISize + borderPadding*2,
-        'Time: ' + this.cur_time/1000, timeConfig);
+        'Time: ' + this.clock.getRemainingSeconds(), timeConfig);
     }
 
     update() {    
         // decreasing the timer
-        if (!this.gameOver && (this.time.now < this.clock.delay)){
-            this.timeRight.text = 'Time:' + parseInt((this.cur_time - this.time.now)/1000);
-            console.log("timer currently: " + this.time.now/1000);
-        }
-        //console.log(this.time.now);
+        this.timeRight.text = 'Time:' + parseInt((this.clock.getRemainingSeconds()));
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
@@ -184,11 +171,8 @@ class Play extends Phaser.Scene{
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion');
         // increasing timer 
-        this.cur_time += 5000;
-        this.time.preUpdate(this.time.now, this.cur_time - this.time.now);
-        this.timeRight.text = this.timeRight.text = 'Time:' + parseInt((this.cur_time)/1000);  
+        this.time.preUpdate(this.time.now, this.cur_time - this.time.now); 
         this.clock.delay += 5000;
-        //console.log("the clock elapsed: " + this.clock.elapsed/1000);
     }
 
 }
