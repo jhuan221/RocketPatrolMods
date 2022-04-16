@@ -74,10 +74,15 @@ class Play extends Phaser.Scene{
         }
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize 
         +borderPadding*2,this.p1Score, scoreConfig);
+
+        // display fire tag
+        scoreConfig.align = 'center';
+        /*this.fireCenter = this.add.text(borderUISize*8 + borderPadding+2, borderUISize
+            + borderPadding*2, 'FIRE', scoreConfig);
+        this.fireCenter.visible = false;*/  
         // GAME OVER flag
         this.gameOver = false;
         // displaying the time
-        //this.time.addEvent(this.displayClock(cur_time));
         // 60-second play clock
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
@@ -114,6 +119,7 @@ class Play extends Phaser.Scene{
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)){
             this.scene.start("menuScene");
         }
+        //fire display
         this.starfield.tilePositionX -= 4;
         if (!this.gameOver){
             this.p1Rocket.update();
@@ -124,6 +130,16 @@ class Play extends Phaser.Scene{
             this.ship03.update(); 
             this.ship04.update();
         }
+        // implement speed up when hitting 30 seconds
+        //console.log(parseInt(this.clock.getRemainingSeconds()));
+        //console.log(parseInt(game.settings.gameTimer/1000) - 30);
+        if (parseInt(this.clock.getRemainingSeconds()) == (parseInt(game.settings.gameTimer/1000) - 30)){
+            this.ship01.moveSpeed += 0.05;
+            this.ship02.moveSpeed += 0.05;
+            this.ship03.moveSpeed += 0.05;
+            this.ship04.moveSpeed += 0.05;
+        }
+        
          // checking collisions
         if (this.checkCollision(this.p1Rocket, this.ship03)){
             this.p1Rocket.reset();
