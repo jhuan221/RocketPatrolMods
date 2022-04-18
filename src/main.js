@@ -15,7 +15,11 @@ let keyF, keyR, keyLEFT, keyRIGHT;
 
 /*
     Point Breakdown
-    Total: 50/100
+    Total: 100/100 (100 is max, total: 115 points)
+
+    60 - Redesign the game's artwork, UI, and sound to change its theme/aesthetic (to something other than sci-fi)
+        * still need to work sound and menu
+
     20 - Implement a new timing/scoring mechanism that adds time to the clock for successful hits
         * every time a ship is hit, the timer increases by five seconds
 
@@ -23,4 +27,6 @@ let keyF, keyR, keyLEFT, keyRIGHT;
         * new ship is faster and player's earn 40 points if they take down the ship
     
     10 - Display the time remaining (in seconds) on the screen 
+
+    5 - Implement the speed increase that happens after 30 seconds in the original game
 */

@@ -5,13 +5,20 @@ class Play extends Phaser.Scene{
 
     preload() {
         // load images/tile sprites
-        this.load.image('rocket', './assets/rocket.png');
-        this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
+        //this.load.image('rocket', './assets/rocket.png');
+        this.load.image('egg', './assets/egg.png');
+        //this.load.image('spaceship', './assets/spaceship.png');
+        this.load.image('field', './assets/field.png');
         this.load.image('speedy', './assets/speedy.png');
+        this.load.image('bunnyfirst', './assets/bunnyfirst.png');
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64,
         frameHeight: 32, stateFrame: 0, endFrame: 9});
+        this.load.spritesheet('bunny', './assets/bunny.png', {frameWidth: 128, 
+        frameHeight:64, stateFrame: 0, endFrame:3});
+        this.load.spritesheet('speedhop', './assets/speedhop.png', {frameWidth: 128, 
+            frameHeight:64, stateFrame: 0, endFrame:3});
+    
         // load audio
         this.load.audio('sfx_select', './assets/blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
@@ -20,29 +27,29 @@ class Play extends Phaser.Scene{
 
     create() {
         // place tile sprite
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'field').setOrigin(0, 0);
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding,
         game.config.width, borderUISize * 2,
-        0x00FF00).setOrigin(0,0);
+        0x4b92b9).setOrigin(0,0);
         // white borders
         this.add.rectangle(0,0, game.config.width, borderUISize,
-        0x000000).setOrigin(0,0);
+        0x6abe30 ).setOrigin(0,0);
         this.add.rectangle(0, game.config.height - borderUISize, game.config.width,
-        borderUISize, 0x000000).setOrigin(0,0);
+        borderUISize,  0x6abe30).setOrigin(0,0);
         this.add.rectangle(0, 0, borderUISize, game.config.height, 
-        0x000000).setOrigin(0,0);
+            0x6abe30).setOrigin(0,0);
         this.add.rectangle(game.config.width -borderUISize, 0, borderUISize,
-        game.config.height, 0x000000).setOrigin(0,0);
+        game.config.height,  0x6abe30).setOrigin(0,0);
         // add rocket (p1 & p2)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize -
-        borderPadding, 'rocket').setOrigin(0, 0);
+        borderPadding, 'egg').setOrigin(0, 0);
         // add spaceships (x3)
         this.ship01 = new Spaceship(this, game.config.width + 
-        borderUISize*6, borderUISize*5, 'spaceship', 0, 30).setOrigin(0, 0);
+        borderUISize*6, borderUISize*5.2, 'bunnyfirst', 0, 30).setOrigin(0, 0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3,
-        borderUISize*6 + borderPadding*3, 'spaceship', 0, 10).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*7 + borderPadding*5.3, 'spaceship',
+        borderUISize*6 + borderPadding*3.2, 'bunnyfirst', 0, 10).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*7 + borderPadding*5, 'bunnyfirst',
         0, 10).setOrigin(0,0);
         this.ship04 = new Spaceship(this, game.config.width, borderUISize*4, 'speedy',
         0, 40).setOrigin(0,0);
@@ -57,13 +64,24 @@ class Play extends Phaser.Scene{
             frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
             frameRate: 30
         });
+        this.anims.create({
+            key: 'bunHop', 
+            frames: this.anims.generateFrameNumbers('bunny', { start: 0, end: 3, first: 0}),
+            frameRate: 12,
+        });
+        this.anims.create({
+            key: 'speedup', 
+            frames: this.anims.generateFrameNumbers('speedhop', { start: 0, end: 3, first: 0}),
+            frameRate: 12,
+        });
+        this.once = false;
         // init score
         this.p1Score = 0;
         //display score
         let scoreConfig = {
-            fontFamily: 'Courier',
+            fontFamily: 'Andale Mono',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
+            backgroundColor: '#6aacd1',
             color: '#843605',
             align: 'right',
             padding: {
@@ -72,14 +90,14 @@ class Play extends Phaser.Scene{
             },
             fixedWidth: 100
         }
+        this.add.rectangle(borderUISize + borderPadding*6, borderUISize + borderPadding*4,
+            110, 50,
+            0x4a9cc9);
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize 
         +borderPadding*2,this.p1Score, scoreConfig);
 
         // display fire tag
         scoreConfig.align = 'center';
-        /*this.fireCenter = this.add.text(borderUISize*8 + borderPadding+2, borderUISize
-            + borderPadding*2, 'FIRE', scoreConfig);
-        this.fireCenter.visible = false;*/  
         // GAME OVER flag
         this.gameOver = false;
         // displaying the time
@@ -94,9 +112,9 @@ class Play extends Phaser.Scene{
         }, null, this);
         // displaying time
         let timeConfig = {
-        fontFamily: 'Courier',
+        fontFamily: 'Andale Mono',
         fontSize: '28px',
-        backgroundColor: '#F3B141',
+        backgroundColor: '#6aacd1',
         color: '#843605',
         align: 'center',
         padding: {
@@ -105,8 +123,12 @@ class Play extends Phaser.Scene{
         },
         fixedWidth: 150
         }
+        this.add.rectangle(borderUISize*16 + borderPadding, borderUISize + borderPadding*3.9,
+            160, 50,
+            0x4a9cc9);
         this.timeRight = this.add.text (borderUISize*13.6 + borderPadding, borderUISize + borderPadding*2,
         'Time: ' + this.clock.getRemainingSeconds(), timeConfig);
+        //this.animalMove(this.ship01);
     }
 
     update() {    
@@ -119,12 +141,22 @@ class Play extends Phaser.Scene{
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)){
             this.scene.start("menuScene");
         }
+        
+
+         // animating bunny
+         //if (!this.once){
+            //this.animalMove(this.ship01);
+        //this.once = true;
+        //}
         //fire display
         this.starfield.tilePositionX -= 4;
         if (!this.gameOver){
             this.p1Rocket.update();
+            //this.animalMove(this.ship01);
+            //this.animalMove(this.ship01);
             //this.p2Rocket.update();
             // update spaceships (x4)
+            //this.animalMove(ship01);
             this.ship01.update();
             this.ship02.update();
             this.ship03.update(); 
@@ -138,6 +170,7 @@ class Play extends Phaser.Scene{
             this.ship02.moveSpeed += 0.05;
             this.ship03.moveSpeed += 0.05;
             this.ship04.moveSpeed += 0.05;
+            
         }
         
          // checking collisions
@@ -173,15 +206,28 @@ class Play extends Phaser.Scene{
 
     shipExplode(ship){
         // temp hide ship
-        ship.alpha = 0;
-        // create explosion sprite at ship's pos
-        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0,0);
-        boom.anims.play('explode');             // play explode animation
-        boom.on('animationcomplete', () => {    // callback after anim completes
-            ship.reset();                       // reset ship pos
-            ship.alpha = 1;                     // make ship visible again
-            boom.destroy();                     // remove explosion sprite 
-        });
+        if (ship.points == 40){
+                ship.alpha = 0;
+            // create explosion sprite at ship's pos
+            let boom = this.add.sprite(ship.x, ship.y, 'speedhop').setOrigin(0,0);
+            boom.anims.play('speedup');             // play explode animation
+            boom.on('animationcomplete', () => {    // callback after anim completes
+                ship.reset();                       // reset ship pos
+                ship.alpha = 1;                     // make ship visible again
+                boom.destroy();                     // remove explosion sprite 
+            });
+        }
+        else{
+            ship.alpha = 0;
+            // create explosion sprite at ship's pos
+            let boom = this.add.sprite(ship.x, ship.y, 'bunny').setOrigin(0,0);
+            boom.anims.play('bunHop');             // play explode animation
+            boom.on('animationcomplete', () => {    // callback after anim completes
+                ship.reset();                       // reset ship pos
+                ship.alpha = 1;                     // make ship visible again
+                boom.destroy();                     // remove explosion sprite 
+            });
+        }
         // score add and repaint
         this.p1Score += ship.points;   
         this.scoreLeft.text = this.p1Score;
@@ -190,6 +236,15 @@ class Play extends Phaser.Scene{
         this.time.preUpdate(this.time.now, this.cur_time - this.time.now); 
         this.clock.delay += 5000;
     }
+
+    /*animalMove(ship){
+        ship.alpha = 0;
+        let hopping = this.add.sprite(ship.x, ship.y, 'bunny');
+        hopping.anims.play('bunHop');
+        hopping.on('animationcomplete', () =>{
+            ship.alpha = 1;
+        })
+    }*/
 
 }
 
