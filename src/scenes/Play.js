@@ -21,8 +21,9 @@ class Play extends Phaser.Scene{
     
         // load audio
         this.load.audio('sfx_select', './assets/blip_select12.wav');
-        this.load.audio('sfx_explosion', './assets/explosion38.wav');
+        this.load.audio('sfx_explosion', './assets/explosion382.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+        //this.load.audio('bkmusic', './assets/bkmusic.wav');
     }
 
     create() {
@@ -129,6 +130,8 @@ class Play extends Phaser.Scene{
         this.timeRight = this.add.text (borderUISize*13.6 + borderPadding, borderUISize + borderPadding*2,
         'Time: ' + this.clock.getRemainingSeconds(), timeConfig);
         //this.animalMove(this.ship01);
+        //this.once = false;
+        //this.sound.play('bkmusic');
     }
 
     update() {    

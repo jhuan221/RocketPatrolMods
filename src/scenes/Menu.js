@@ -5,13 +5,13 @@ class Menu extends Phaser.Scene{
 
     preload(){
         // load audio
-        this.load.audio('sfx_select', './assets/blip_select12.wav');
+        this.load.audio('sfx_select', './assets/start.wav');
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
-        this.load.image('field', './assets/field.png');
+        this.load.image('menufield', './assets/menufield.png');
     }
     create() {
-        this.add.tileSprite(0, 0, 640, 480, 'field').setOrigin(0, 0);
+        this.add.tileSprite(0, 0, 640, 480, 'menufield').setOrigin(0, 0);
         // menu text config
         let menuConfig = {
             fontFamily: 'Andale Mono',
@@ -27,13 +27,13 @@ class Menu extends Phaser.Scene{
         }
 
         // show menu text
-        this.add.text(game.config.width/2, game.config.height/2 - borderUISize -
+        this.add.text(game.config.width/2, game.config.height/2 - borderUISize-30 -
         borderPadding, 'bunny patrol', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Use <- -> arrows to move & (F) to fire', 
+        this.add.text(game.config.width/2, (game.config.height/2) - 30, 'Use <- -> arrows to move & (F) to fire', 
         menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#37946e';
         menuConfig.color = '#000';
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize +
+        this.add.text(game.config.width/2, game.config.height/2 + borderUISize-30 +
         borderPadding, 'Press <- for Novice or -> for Expert', menuConfig).setOrigin(0.5);
 
         // define keys
